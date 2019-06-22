@@ -1,0 +1,22 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: proxy
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8761/eureka/
+
+zuul:
+  routes:
+    userApi:
+      path: /api/user/**
+      serviceId: user
+      stripPrefix: false
+    orderApi:
+      path: /api/order/**
+      serviceId: order
+      stripPrefix: false
