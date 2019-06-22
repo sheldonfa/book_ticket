@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    Customer findOneByCustomerId(Long customerId);
-
-    Customer findOneByUsername(String username);
+    Customer findOneById(Long customerId);
 
     @Modifying
     @Query("UPDATE customer set  deposit = deposit-?2 where id =?1")

@@ -29,7 +29,8 @@ public class TicketService {
             dto.setStatus("TICKET_LOCKED");
             jmsTemplate.convertAndSend("order:locked", dto);
         } else {
-
+            dto.setStatus("TICKET_LOCK_FAIL");
+            jmsTemplate.convertAndSend("order:fail", dto);
         }
     }
 
@@ -43,6 +44,20 @@ public class TicketService {
         }
         dto.setStatus("TICKET_MOVED");
         jmsTemplate.convertAndSend("order:finish", dto);
+    }
+
+    @Transactional
+    @JmsListener(destination = "order:ticket_error", containerFactory = "msgFactory")
+    public void handleTicketUnlock(OrderDTO dto) {
+        int count = ticketRepository.unlockTicket(dto.getCustomerId(), dto.getTicketNum());
+        if (count == 0) {
+            log.info("Ticket already unlocked:{}", dto);
+        }
+        count = ticketRepository.unMoveTicket(dto.getCustomerId(), dto.getTicketNum());
+        if (count == 0) {
+            log.info("Ticket already unmoved, or not moved:{}", dto);
+        }
+        jmsTemplate.convertAndSend("order:fail", dto);
     }
 
     /**

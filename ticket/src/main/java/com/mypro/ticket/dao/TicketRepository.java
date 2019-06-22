@@ -22,10 +22,18 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Ticket findOneByTicketNumAndLockUser(Long ticketNum, Long lockUser);
 
     @Modifying
-    @Query("UPDATE ticket SET lockUser = ?1 WHERE lockUser is null AND ticketNum = ?2")
+    @Query("UPDATE ticket SET lockUser = ?1 WHERE ticketNum = ?2 and lockUser is null and owner is null ")
     int lockTicket(Long customerId, Long ticketNum);
 
     @Modifying
     @Query("UPDATE ticket SET owner = ?1, lockUser = null WHERE lockUser = ?1 AND ticketNum = ?2")
     int moveTicket(Long customerId, Long ticketNum);
+
+    @Modifying
+    @Query("UPDATE ticket SET lockUser = null where lockUser = ?1 and ticketNum = ?2")
+    int unlockTicket(Long customerId, Long ticketNum);
+
+    @Modifying
+    @Query("UPDATE ticket SET owner = null where owner = ?1 and ticketNum = ?2")
+    int unMoveTicket(Long customerId, Long ticketNum);
 }

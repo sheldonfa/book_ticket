@@ -1,6 +1,13 @@
 package com.mypro.service.dto;
 
-public class OrderDTO {
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+
+@Setter
+@Getter
+public class OrderDTO implements Serializable{
 
     private Long id;
     private String uuid;
@@ -10,59 +17,16 @@ public class OrderDTO {
     private int amount;
     private String status;
 
-    public Long getId() {
-        return id;
+    public OrderDTO() {
     }
 
-    public void setId(Long id) {
+    public OrderDTO(Long id, String uuid, Long customerId, String title, Long ticketNum, int amount, String status) {
         this.id = id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Long getTicketNum() {
-        return ticketNum;
-    }
-
-    public void setTicketNum(Long ticketNum) {
         this.ticketNum = ticketNum;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
         this.amount = amount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
     }
 

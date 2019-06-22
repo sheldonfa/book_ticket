@@ -30,26 +30,28 @@ public class CustomerService {
     private PayInfoRepository payInfoRepository;
 
     @Transactional
-    @JmsListener(destination = "order:pay", containerFactory = "msgFactor")
+    @JmsListener(destination = "order:pay", containerFactory = "msgFactory")
     public void handleOrderPay(OrderDTO dto) {
         log.info("Get new order for pay:{}", dto);
 
         PayInfo pay = payInfoRepository.findOneByOrderId(dto.getId());
         if (pay != null) {
             log.warn("Order already paid, duplicated message:{}", dto);
-        } else {
-            Customer customer = customerRepository.findOneByCustomerId(dto.getCustomerId());
-            if (customer.getDeposit() < dto.getAmount()) {
-                // not enouth deposit.
-                return;
-            }
-            pay = new PayInfo();
-            pay.setOrderId(dto.getId());
-            pay.setAmount(dto.getAmount());
-            pay.setStatus("PAID");
-            payInfoRepository.save(pay);
-            customerRepository.charge(customer.getId(), dto.getAmount());
+            return;
         }
+        Customer customer = customerRepository.findOneById(dto.getCustomerId());
+        if (customer.getDeposit() < dto.getAmount()) {
+            log.warn("Not enough deposit.");
+            dto.setStatus("NOT_ENOUGH_DEPOSIT");
+            jmsTemplate.convertAndSend("order:ticket_error", dto);
+            return;
+        }
+        pay = new PayInfo();
+        pay.setOrderId(dto.getId());
+        pay.setAmount(dto.getAmount());
+        pay.setStatus("PAID");
+        payInfoRepository.save(pay);
+        customerRepository.charge(customer.getId(), dto.getAmount());
         dto.setStatus("PAID");
         jmsTemplate.convertAndSend("order:ticket_move", dto);
     }

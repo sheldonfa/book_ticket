@@ -25,12 +25,12 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="order" options="-parameters" />
-      <module name="proxy" options="-parameters" />
-      <module name="registry" options="-parameters" />
+      <module name="order" options="" />
+      <module name="proxy" options="" />
+      <module name="registry" options="" />
       <module name="service" options="" />
-      <module name="ticket" options="-parameters" />
-      <module name="user" options="-parameters" />
+      <module name="ticket" options="" />
+      <module name="user" options="" />
     </option>
   </component>
 </project>

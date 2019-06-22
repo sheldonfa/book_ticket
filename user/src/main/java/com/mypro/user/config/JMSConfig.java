@@ -28,9 +28,10 @@ public class JMSConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory, MessageConverter jacksonJmsMessageConverter) {
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
         jmsTemplate.setSessionTransacted(true);
+        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter);
         return jmsTemplate;
     }
 
